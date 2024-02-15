@@ -72,7 +72,7 @@ export default class App {
 		const destCourier = this.#couriers.find(courier => courier.courierID === destCourierID);
 		const fTask = srcCourier.getTaskById({taskID: movedTaskID})
 		if (fTask.taskDistrict === destCourier.district) {
-			if (parseInt(destCourier.getSumMass()) + parseInt(fTask.taskMass) < 3) {
+			if (parseInt(destCourier.getSumMass()) + parseInt(fTask.taskMass) <= 3) {
 				try {
 					if (srcCourierID !== destCourierID) {
 						await AppModel.moveTask({ taskID: movedTaskID, srcCourierID, destCourierID })
@@ -90,11 +90,14 @@ export default class App {
 					console.error(err)
 				}
 			} else {
+				alert('Количество заданий превышено')
 				location.reload()
-				this.addNotification({text: 'Нельзя добавить задание с другим регионом курьеру', type: 'error'})
+				this.addNotification({text: 'Количество заданий превышено', type: 'error'})
 			}
 		} else {
+			alert('Нельзя добавить задание с другим регионом курьеру')
 			location.reload()
+			setTimeout(() => 5000)
 			this.addNotification({text: 'Нельзя добавить задание с другим регионом курьеру', type: 'error'})
 		}
 	};
